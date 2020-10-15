@@ -1,0 +1,31 @@
+{
+  "name": "kokpit",
+  "version": "1.0.0",
+  "description": "Kafka client for pub sub",
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-zip"
+        }
+      ]
+    }
+  },
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "Danesh Hussain Zaki",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^10.1.3",
+    "electron-packager": "^15.1.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "jquery": "^3.5.1",
+    "kafkajs": "^1.14.0",
+    "socket.io": "^2.3.0"
+  }
+}
