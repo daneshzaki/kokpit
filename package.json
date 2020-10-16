@@ -1,6 +1,6 @@
 {
   "name": "kokpit",
-  "version": "1.0.0",
+  "version": "0.2",
   "description": "Kafka client for pub sub",
   "config": {
     "forge": {
