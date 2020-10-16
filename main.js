@@ -1,11 +1,13 @@
 const { app, BrowserWindow } = require('electron')
 const nativeImage = require('electron').nativeImage
+const path = require('path');
 
 function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1250,
     height: 550,
+    icon: __dirname + '/images/icon.ico',
     autoHideMenuBar: true,
     resizable: true,
     fullscreenable:false, 
@@ -16,11 +18,11 @@ function createWindow () {
     }
   })
 
-  //no menu
+  //no menu 
   win.removeMenu();
-  const image = nativeImage.createFromPath('/code/electronjs/kokpitel/images/icon.png');
+  //const image = nativeImage.createFromPath('/code/electronjs/kokpitel/images/icon.ico');
   //set icon
-  win.setOverlayIcon(image, '');
+  //win.setOverlayIcon(image, '');
   
   // and load the index.html of the app.
   win.loadFile('index.html')
