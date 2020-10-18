@@ -54,9 +54,34 @@
                     method: 'post',
                     data: { 'brokerHost': brokerHost, 'brokerPort': brokerPort, 'topicName': topicName, 'message': pubMsg },
                     success: function (result) {
-                        $("#pubStatus").html(result);
+                        //alert(result);
+                        //check error
+                        if (result.includes("Error")) {
+                            //alert(" "+result);
+                            $("#pubStatus").css('color', 'red');
+                            $("#pubStatus").html(result);
+                        }
+                        if (result.includes("Connected")) {
+                            //alert("2 "+result);
+
+                            //connected
+                            if (result == "Connected") {
+                                //alert("3 "+result);
+                                $("#pubConnectStatus").html(result);
+                            }
+                            //published successfully
+                            else {
+                                //alert("4 "+result);
+                                $("#pubConnectStatus").html("Connected");
+                                result = result.replace("Connected", "");
+                                $("#pubStatus").css('color', 'darkgray');
+                                $("#pubStatus").html(result);
+                            }
+
+                        }
+
                     }
-                    //TODO handle errors
+
                 });
             });
 
@@ -75,8 +100,29 @@
                     success: function (result) {
                         console.log("sub result - " + result);
                         //$("#subMessages").html(result);
+                        if (result.includes("Error")) {
+                            //alert(" "+result);
+                            $("#subStatus").css('color', 'red');
+                            $("#subStatus").html(result);
+                        }
+                        if (result.includes("Connected")) {
+                            //alert("2 "+result);
+
+                            //connected
+                            if (result == "Connected") {
+                                //alert("3 "+result);
+                                $("#subConnectStatus").html(result);
+                            }
+                            //sub successfully
+                            else {
+                                //alert("4 "+result);
+                                $("#subConnectStatus").html("Connected");
+                                result = result.replace("Connected", "");
+                                $("#subStatus").css('color', 'darkgray');
+                                $("#subStatus").html(result);
+                            }
+                        }
                     }
-                    //TODO handle errors
                 });
             });
 
@@ -141,14 +187,7 @@
                                 placeholder="Broker Host" /> &nbsp;
                             <input type="text" class="form-control  form-control-sm" name="brokerPort" id="brokerPort"
                                 placeholder="Broker Port" />
-                        </div>
-                        <div class="input-group">
-                            <div class="switch">
-                                <label>
-                                    <input type="checkbox" id="connectPub" value="AutoConnect" disabled checked>
-                                    Connect
-                                </label>
-                            </div>
+                                <div id="pubConnectStatus" class="pl-1 pr-1 pt-2 font-weight-bold form-control-sm align-text-bottom bg-secondary text-white">Not Connected</div>
                         </div>
                     </div>
                     <p />
@@ -188,14 +227,7 @@
                                 name="brokerHost" placeholder="Broker Host" /> &nbsp;
                             <input type="text" class="form-control  form-control-sm" id="subBrokerPort"
                                 name="brokerPort" placeholder="Broker Port" />
-                        </div>
-                        <div class="input-group">
-                            <div class="switch">
-                                <label>
-                                    <input type="checkbox" id="connectSub" disabled checked>
-                                    AutoConnect
-                                </label>
-                            </div>
+                            <div id="subConnectStatus" class="pl-1 pr-1 pt-2 font-weight-bold form-control-sm align-text-bottom bg-secondary text-white">Not Connected</div>
                         </div>
                     </div>
                     <label for="subTopicName">

@@ -28,11 +28,9 @@ app.get('/', function(req, res, next){
 
 //to handle publish requests
 app.post('/publish', function(req, res, next){
-    console.log("**** /publish called");    
-    console.log(req.body.brokerHost+':'+req.body.brokerPort, req.body.topicName, req.body.message);
-    producer(req.body.brokerHost+':'+req.body.brokerPort, req.body.topicName, req.body.message);
-    res.writeHead(200, {'Content-Type': 'text/plain'});  
-    res.end("Message "+ req.body.message + " published");
+    console.log("Kokpit /publish called");    
+    console.log("Kokpit "+req.body.brokerHost+':'+req.body.brokerPort, req.body.topicName, req.body.message);
+    producer(req.body.brokerHost+':'+req.body.brokerPort, req.body.topicName, req.body.message, res);
 });
 
 //to handle consume requests
