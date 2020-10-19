@@ -23,8 +23,8 @@ module.exports = async function producer(broker, topicName, message, res) {
     res.write("Connected");
 
   } catch (error) {
-    console.log("Error: ***Kokpit Couldn't connect to Kakfa broker");
-    res.end("Error: Couldn't connect to Kakfa broker");
+    console.log("Error: ***Kokpit Couldn't connect to Kafka broker");
+    res.end("Error: Couldn't connect to Kafka broker");
 
     return;
   }

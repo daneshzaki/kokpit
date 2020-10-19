@@ -41,6 +41,7 @@
     <script>
 
         $(document).ready(function () {
+            $("#pubStatus").hide();
             //pub
             $("#publish").click(function () {
 
@@ -58,8 +59,10 @@
                         //check error
                         if (result.includes("Error")) {
                             //alert(" "+result);
-                            $("#pubStatus").css('color', 'red');
+                            $("#pubStatus").addClass('alert-danger');
                             $("#pubStatus").html(result);
+                            $("#pubStatus").show();
+
                         }
                         if (result.includes("Connected")) {
                             //alert("2 "+result);
@@ -68,14 +71,18 @@
                             if (result == "Connected") {
                                 //alert("3 "+result);
                                 $("#pubConnectStatus").html(result);
+                                
                             }
                             //published successfully
                             else {
                                 //alert("4 "+result);
                                 $("#pubConnectStatus").html("Connected");
                                 result = result.replace("Connected", "");
-                                $("#pubStatus").css('color', 'darkgray');
+
+                                $("#pubStatus").removeClass('alert-danger');
+                                $("#pubStatus").addClass('alert-secondary');
                                 $("#pubStatus").html(result);
+                                $("#pubStatus").show();
                             }
 
                         }
@@ -118,7 +125,7 @@
                                 //alert("4 "+result);
                                 $("#subConnectStatus").html("Connected");
                                 result = result.replace("Connected", "");
-                                $("#subStatus").css('color', 'darkgray');
+                                $("#subStatus").css('color', 'black');
                                 $("#subStatus").html(result);
                             }
                         }
@@ -148,8 +155,7 @@
             socket.on('message', function (msg) {
                 //alert("Raw message: " + msg);
                 $("#subMessages").append(msg);
-                $("#subMessages").append("\n\n");
-
+                $("#subMessages").append("\n");
             });
         });
 
@@ -187,7 +193,8 @@
                                 placeholder="Broker Host" /> &nbsp;
                             <input type="text" class="form-control  form-control-sm" name="brokerPort" id="brokerPort"
                                 placeholder="Broker Port" />
-                                <div id="pubConnectStatus" class="pl-1 pr-1 pt-2 font-weight-bold form-control-sm align-text-bottom bg-secondary text-white">Not Connected</div>
+                                <div id="pubConnectStatus" class="alert alert-secondary form-control-sm ">Not Connected</div>
+                                
                         </div>
                     </div>
                     <p />
@@ -205,7 +212,11 @@
                     <input type="button" class="btn btn-raised btn-secondary" id="publish" value="Publish"></input>
                 </form>
 
-                <div id="pubStatus"></div>
+                
+                <div id="pubStatus" class="alert alert-secondary" role="alert">
+                </div>
+
+                
             </div>
             <!-- Consumer -->
             <div class="col-sm">
@@ -227,7 +238,7 @@
                                 name="brokerHost" placeholder="Broker Host" /> &nbsp;
                             <input type="text" class="form-control  form-control-sm" id="subBrokerPort"
                                 name="brokerPort" placeholder="Broker Port" />
-                            <div id="subConnectStatus" class="pl-1 pr-1 pt-2 font-weight-bold form-control-sm align-text-bottom bg-secondary text-white">Not Connected</div>
+                            <div id="subConnectStatus" class="alert alert-secondary form-control-sm ">Not Connected</div>
                         </div>
                     </div>
                     <label for="subTopicName">
@@ -238,13 +249,18 @@
                     <label for="subMessages">
                         Message&nbsp;
                     </label>
+
                     <textArea class="form-control  form-control-sm" rows="3" id="subMessages" name="messages"
                         disabled></textArea>
+
                     <br />
                     <!--TODO: Add snackbar-->
                     <input type="button" class="btn btn-raised btn-secondary" id="subscribe" value="Subscribe"></input>
                 </form>
-                <div id="subStatus"></div>
+
+                <div id="subStatus" class="alert" role="alert">
+                </div>
+
             </div>
         </div>
     </div>

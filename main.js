@@ -4,7 +4,7 @@ function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1250,
-    height: 550,
+    height: 575,
     icon: __dirname + '/images/icon.ico',
     autoHideMenuBar: true,
     resizable: true,
