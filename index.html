@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
-
+<!--
+    HTML for Kokpit Kafka client. Uses JQuery for UI actions and Bootstrap for rendering
+-->
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Kokpit - Kafka Pub-Sub Client</title>
@@ -41,15 +43,17 @@
     <script>
 
         $(document).ready(function () {
+            //hide alerts
             $("#pubStatus").hide();
-            //pub
+            $("#subStatus").hide();
+            //publish clicked
             $("#publish").click(function () {
 
                 var brokerHost = $("#brokerHost").val();
                 var brokerPort = $("#brokerPort").val();
                 var topicName = $("#topicName").val();
                 var pubMsg = $("#message").val();
-                // alert(brokerHost+' '+brokerPort+' '+topicName+' '+pubMsg);
+
                 $.ajax({
                     url: "http://localhost:8182/publish",
                     method: 'post',
@@ -62,7 +66,6 @@
                             $("#pubStatus").addClass('alert-danger');
                             $("#pubStatus").html(result);
                             $("#pubStatus").show();
-
                         }
                         if (result.includes("Connected")) {
                             //alert("2 "+result);
@@ -70,12 +73,14 @@
                             //connected
                             if (result == "Connected") {
                                 //alert("3 "+result);
+                                $("#pubConnectStatus").addClass('alert-success');                                
                                 $("#pubConnectStatus").html(result);
                                 
                             }
                             //published successfully
                             else {
                                 //alert("4 "+result);
+                                $("#pubConnectStatus").addClass('alert-success');
                                 $("#pubConnectStatus").html("Connected");
                                 result = result.replace("Connected", "");
 
@@ -86,7 +91,6 @@
                             }
 
                         }
-
                     }
 
                 });
@@ -105,30 +109,7 @@
                     method: 'post',
                     data: { 'brokerHost': subBrokerHost, 'brokerPort': subBrokerPort, 'topicName': subTopicName },
                     success: function (result) {
-                        console.log("sub result - " + result);
-                        //$("#subMessages").html(result);
-                        if (result.includes("Error")) {
-                            //alert(" "+result);
-                            $("#subStatus").css('color', 'red');
-                            $("#subStatus").html(result);
-                        }
-                        if (result.includes("Connected")) {
-                            //alert("2 "+result);
-
-                            //connected
-                            if (result == "Connected") {
-                                //alert("3 "+result);
-                                $("#subConnectStatus").html(result);
-                            }
-                            //sub successfully
-                            else {
-                                //alert("4 "+result);
-                                $("#subConnectStatus").html("Connected");
-                                result = result.replace("Connected", "");
-                                $("#subStatus").css('color', 'black');
-                                $("#subStatus").html(result);
-                            }
-                        }
+                        console.log("consumer returned - "+result);
                     }
                 });
             });
@@ -151,12 +132,42 @@
             //init socket 
             var socket = io('http://localhost:8182');
 
-            //on message call update 
+            //on message 
             socket.on('message', function (msg) {
-                //alert("Raw message: " + msg);
+               // alert("Raw message: " + msg);
+                $("#subMessages").addClass('alert-secondary');
                 $("#subMessages").append(msg);
                 $("#subMessages").append("\n");
+
+                //clear the error message
+                $("#subStatus").removeClass('alert-danger');
+                $("#subStatus").addClass('alert-secondary');
+                $("#subStatus").html('Subscribed');
             });
+
+            //error 
+            socket.on('error', function (msg) {
+                //alert(msg);
+                $("#subStatus").addClass('alert-danger');
+                $("#subStatus").html(msg);
+                $("#subStatus").show();
+            });
+            //status
+            socket.on('status', function (msg) {
+                //alert(msg);            
+                $("#subStatus").removeClass('alert-danger');
+                $("#subStatus").addClass('alert-secondary');
+                $("#subStatus").html(msg);
+                $("#subStatus").show();
+            });
+            //connected
+            socket.on('connected', function (msg) {
+                //alert(msg);            
+                $("#subConnectStatus").addClass('alert-success');
+                $("#subConnectStatus").html(msg);
+            });
+
+
         });
 
     </script>
@@ -174,7 +185,7 @@
         <!-- header -->
         <nav class="navbar navbar-light bg-light">
             <a class="navbar-brand" href="#">
-                <img src="./images/icon.png" width="24" height="24" class="d-inline-block img-thumbnail" alt="">
+                <img src="./images/icon.png" width="48" height="48" class="d-inline-block img-thumbnail" alt="">
                 Kokpit
             </a>
         </nav>
@@ -187,14 +198,17 @@
                     <label>
                         Broker Settings
                     </label>
+                    <label for="blankforalignmentwithsub">
+                        <small class="text-justify">&nbsp;</small>
+                    </label>
+
                     <div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
                         <div class="btn-group mr-2" role="group" aria-label="First group">
                             <input type="text" class="form-control  form-control-sm" name="brokerHost" id="brokerHost"
                                 placeholder="Broker Host" /> &nbsp;
                             <input type="text" class="form-control  form-control-sm" name="brokerPort" id="brokerPort"
                                 placeholder="Broker Port" />
-                                <div id="pubConnectStatus" class="alert alert-secondary form-control-sm ">Not Connected</div>
-                                
+                                <div id="pubConnectStatus" class="alert alert-secondary form-control-sm ">Not Connected</div>                                
                         </div>
                     </div>
                     <p />
@@ -206,13 +220,12 @@
                     <label for="message">
                         Message&nbsp;
                     </label>
-                    <textArea class="form-control  form-control-sm" rows="3" id="message" name="message"></textArea>
+                    <textArea class="form-control  form-control-sm" rows="4" id="message" name="message"></textArea>
                     <br />
                     <!--TODO: Add snackbar-->
                     <input type="button" class="btn btn-raised btn-secondary" id="publish" value="Publish"></input>
                 </form>
 
-                
                 <div id="pubStatus" class="alert alert-secondary" role="alert">
                 </div>
 
@@ -258,7 +271,7 @@
                     <input type="button" class="btn btn-raised btn-secondary" id="subscribe" value="Subscribe"></input>
                 </form>
 
-                <div id="subStatus" class="alert" role="alert">
+                <div id="subStatus"  class="alert alert-secondary" role="alert">
                 </div>
 
             </div>

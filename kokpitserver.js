@@ -1,3 +1,7 @@
+/**
+ * Kokpit Server code for handling Kafka client calls on the server
+ */
+
 //setup
 var express = require('express');
 var app = express();
@@ -17,7 +21,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 })); 
 
-
 //to serve images etc
 app.use(express.static('public'));
 
@@ -28,21 +31,15 @@ app.get('/', function(req, res, next){
 
 //to handle publish requests
 app.post('/publish', function(req, res, next){
-    console.log("Kokpit /publish called");    
-    console.log("Kokpit "+req.body.brokerHost+':'+req.body.brokerPort, req.body.topicName, req.body.message);
+    console.log("Kokpit: /publish called");    
+    console.log("Kokpit: received "+req.body.brokerHost+':'+req.body.brokerPort, req.body.topicName, req.body.message);
     producer(req.body.brokerHost+':'+req.body.brokerPort, req.body.topicName, req.body.message, res);
 });
 
 //to handle consume requests
 app.post('/consume', function(req, res, next){
     //TODO: add group to UI
-    console.log("**** /consume called \n"+req.body.brokerHost+':'+req.body.brokerPort, "kokpitgroup", req.body.topicName);
-    //todo remove the dummy responses
-    /*io.sockets.emit('message',"dummy msg1");
-    io.sockets.emit('message',"dummy msg2");
-    io.sockets.emit('message',"dummy msg3");*/
-
-    //todo uncomment this
+    console.log("Kokpit: /consume called \n"+req.body.brokerHost+':'+req.body.brokerPort, "kokpitgroup", req.body.topicName);
     consumer(req.body.brokerHost+':'+req.body.brokerPort, "kokpitgroup", req.body.topicName, io);
 });
 

@@ -1,42 +1,67 @@
-//Kafka Consumer
-//setup
-console.log("Kafka consumer");
+/**
+ * Kafka consumer code based on Kafka JS
+ */
+
+console.log("Kokpit: Kafka consumer");
 const { Kafka } = require('kafkajs');
 
-//subscriber
-
 module.exports = async function consumer(broker, group, topicName, io) {
-  console.log("^^^^^^Kafka consumer with " + broker + " topic as " + topicName + " group as " + group);
+    console.log("Kokpit: Starting Kafka consumer with " + broker + " topic as " + topicName + " group as " + group);
 
-  const kafka = new Kafka({
-    clientId: 'kokpit-talking',
-    //externalize
-    brokers: [broker]
-  });
+    //setup
+    const kafka = new Kafka({
+        clientId: 'kokpit-talking',
+        brokers: [broker]
+    });
 
-  const consumer = kafka.consumer({ groupId: group });
+    const consumer = kafka.consumer({ groupId: group });
 
-  await consumer.connect();
-  console.log("^^^^^^Kafka consumer connected");
+    //connect
+    try 
+    {
+        await consumer.connect();
+        io.sockets.emit('connected', "Connected");
+    }
+    catch (error)
+    {
+        console.log("Error: ***Kokpit Consumer Couldn't connect to Kafka broker");
+        io.sockets.emit('error', "Error: Consumer couldn't connect to Kafka broker");
+        return;
+    }
+    console.log("Kokpit: Kafka consumer connected");
 
-  await consumer.subscribe({ topic: topicName, fromBeginning: true });
-  console.log("^^^^^^Kafka consumer subscribed");
-  console.log("consuming...");
-  await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
+    //subscribe
+    try 
+    {
+        await consumer.subscribe({ topic: topicName, fromBeginning: true });
+        io.sockets.emit('status', "Subscribed");
+    }
+    catch (error)
+    {
+        console.log("Error: ***Kokpit Consumer couldn't subscribe to topic");
+        io.sockets.emit('error', "Error: Consumer couldn't subscribe to topic");
+        return;
+    }
 
-      /*console.log({
-        partition,
-        offset: message.offset,
-        value: message.value.toString(),});*/
+    console.log("Kokpit: Kafka consumer subscribed");
+    console.log("Kokpit: consuming...");
 
-      //working code
-      //res.send(message.value.toString());
-      io.sockets.emit('message', message.value.toString());
-
-
-      //todo: send continous messages to browser - use socket.io
-    },
-  });
+    //consuming
+    try
+    {
+        await consumer.run({
+            eachMessage: async ({ topic, partition, message }) => {
+    
+                console.log("Kokpit: consumer received message - "+message.value.toString());
+                io.sockets.emit('message', message.value.toString());
+            },
+        });
+    
+    }
+    catch (error)
+    {
+        console.log("Error: ***Kokpit Consumer couldn't consume message");
+        io.sockets.emit('error', "Error: Consumer couldn't consume message");
+    }
 
 }

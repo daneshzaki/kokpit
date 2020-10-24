@@ -1,10 +1,14 @@
+/**
+ * This file creates and manages the Electron JS window
+ */
+
 const { app, BrowserWindow } = require('electron')
 
 function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({
     width: 1250,
-    height: 575,
+    height: 600,
     icon: __dirname + '/images/icon.ico',
     autoHideMenuBar: true,
     resizable: true,
@@ -46,6 +50,5 @@ app.on('activate', () => {
   }
 })
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// call the kokpitsever class to handle the Kafka client functionality
 const kokpitserver = require("./kokpitserver");
