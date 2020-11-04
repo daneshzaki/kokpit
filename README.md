@@ -7,9 +7,7 @@ Kokpit is built using <a href="https://kafka.js.org/">KafkaJS</a>, <a href="http
 
 <img src = "https://raw.githubusercontent.com/daneshzaki/kokpit/main/images/kokpitflow.png" />
 
-For more details, please see this <a href="https://dzone.com/articles/building-a-simple-kafka-client-for-the-web-and-des">post</a>.
-
-The latest version is 0.3. Available <a href="https://github.com/daneshzaki/kokpit/releases/tag/v0.3">here</a>.
+For more details, please see this <a href="https://dzone.com/articles/building-a-simple-kafka-client-for-the-web-and-des">post</a>. The latest version is 0.3. Available <a href="https://github.com/daneshzaki/kokpit/releases/tag/v0.3">here</a>.
 
 
 
